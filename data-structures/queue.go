@@ -31,7 +31,7 @@ func (q *Queue) Print() {
 }
 
 // Enqueue adds a new node to the beginning of the queue.
-func (q *Queue) Enqueue(val node) {
+func (q *Queue) Enqueue(val any) {
     newNode := node{
         value: val,
         next: nil,
