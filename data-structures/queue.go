@@ -49,7 +49,7 @@ func (q *Queue) Enqueue(val any) {
 }
 
 // Dequeue removes the first node at the beginning of the queue and returns the value of that node.
-func (q *Queue) Dequeue() (*any, error) {
+func (q *Queue) Dequeue() (any, error) {
     if q.Length == 0 {
         return nil, fmt.Errorf("%s", "queue already has length of zero.")
     }
@@ -64,5 +64,5 @@ func (q *Queue) Dequeue() (*any, error) {
 
     q.Length -= 1
 
-    return &temp.value, nil
+    return temp.value, nil
 }
