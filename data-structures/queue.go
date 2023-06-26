@@ -20,7 +20,7 @@ func (q *Queue) Print() {
     for {
         if current != nil {
             if current.next != nil {
-                fmt.Printf("current: %v, next: %v", current.value, current.next.value)
+                fmt.Printf("current: %v, next: %v\n", current.value, current.next.value)
                 current = current.next
             } else {
                 fmt.Printf("current: %v, next: nil\n", current.value)
