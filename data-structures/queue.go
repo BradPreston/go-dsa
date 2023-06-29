@@ -3,7 +3,7 @@ package dataStructures
 import "fmt"
 
 type node struct {
-    value   any
+    Value   any
     next    *node
 }
 
@@ -20,10 +20,10 @@ func (q *Queue) Print() {
     for {
         if current != nil {
             if current.next != nil {
-                fmt.Printf("current: %v, next: %v\n", current.value, current.next.value)
+                fmt.Printf("current: %v, next: %v\n", current.Value, current.next.Value)
                 current = current.next
             } else {
-                fmt.Printf("current: %v, next: nil\n", current.value)
+                fmt.Printf("current: %v, next: nil\n", current.Value)
                 break
             }
         }
@@ -33,7 +33,7 @@ func (q *Queue) Print() {
 // Enqueue adds a new node to the beginning of the queue.
 func (q *Queue) Enqueue(val any) {
     newNode := node{
-        value: val,
+        Value: val,
         next: nil,
     }
 
@@ -48,7 +48,7 @@ func (q *Queue) Enqueue(val any) {
     q.Length += 1
 }
 
-// Dequeue removes the first node at the beginning of the queue and returns the value of that node.
+// Dequeue removes the first node at the beginning of the queue and returns the Value of that node.
 func (q *Queue) Dequeue() (any, error) {
     if q.Length == 0 {
         return nil, fmt.Errorf("%s", "queue already has length of zero.")
@@ -64,5 +64,5 @@ func (q *Queue) Dequeue() (any, error) {
 
     q.Length -= 1
 
-    return temp.value, nil
+    return temp.Value, nil
 }
