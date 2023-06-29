@@ -11,7 +11,7 @@ type SinglyLinkedList struct {
     Length  int
 }
 
-var indexOutOfBoundsErr = "index must be greater than zero and less than the length of the list"
+var indexOutOfBoundsErr = "index must be greater than zero and less than the length of the list."
 var emptyListErr = "list already has length of zero."
 
 // Print loops through all the nodes in the queue and prints them to the console.
@@ -120,7 +120,7 @@ func (s *SinglyLinkedList) Unshift(val any) {
 // Get finds a node by index and returns it.
 func (s *SinglyLinkedList) Get(index int) (*node, error) {
     if index < 0 || index >= s.Length {
-        return nil, fmt.Errorf("no node found at index %d", index)
+        return nil, fmt.Errorf("no node found at index %d.", index)
     }
 
     counter := 0
