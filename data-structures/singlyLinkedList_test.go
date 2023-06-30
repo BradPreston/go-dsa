@@ -1,0 +1,73 @@
+package dataStructures
+
+import (
+	"testing"
+)
+
+var incorrectLengthError = "%s: incorrect list length. got %d, but wanted %d"
+
+func Test_Push(t *testing.T) {
+    tests := []struct{
+        name    string
+        values  []string
+        length  int
+    }{
+        { "adds one node to end of list", []string{"test"}, 1 },
+        { "adds three nodes to the end of list",  []string{"one","two","three"}, 3 },
+    }
+
+    for _, test := range tests {
+        l := SinglyLinkedList{}
+
+        for _, node := range test.values {
+            l.Push(node)
+        }
+
+        if l.Length != test.length {
+            t.Errorf(incorrectLengthError, test.name, l.Length, test.length)
+        }
+    }
+}
+
+func Test_Pop(t *testing.T) {
+    tests := []struct {
+        name            string
+        values          []string
+        lengthAfterPop  int
+    }{
+        { "removes the last item from a list with length of 1", []string{"one"}, 0 },
+        { "removes the last item from a list with a length of 3", []string{"one","two","three"}, 2 },
+        { "throws an error if trying to pop from empty list", []string{}, 0 },
+        { "popped node has a value of 'one'", []string{"one"}, 0 },
+    }
+
+    for _, test := range tests {
+        l := SinglyLinkedList{}
+
+        for _, node := range test.values {
+            l.Push(node)
+        }
+
+        popped, err := l.Pop()
+        if err != nil {
+            want := "list already has length of zero."
+
+            if err.Error() == want {
+                continue
+            }
+            
+            t.Errorf("%s: expected empty list error. got %v, but wanted %v", test.name, want, emptyListErr)
+            return
+        }
+
+        if l.Length != test.lengthAfterPop {
+            t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterPop)
+        }
+
+        want := test.values[len(test.values) - 1]
+
+        if popped.Value != want {
+            t.Errorf("%s: incorrect value from pop. got %v, but wanted %v", test.name, popped, want)
+        }
+    }
+}
