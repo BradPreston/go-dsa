@@ -172,3 +172,30 @@ func Test_Get(t *testing.T) {
         }
     }
 }
+
+func Test_Set(t *testing.T) {
+    tests := []struct{
+        name        string
+        values      []string
+        newValue    string
+        index       int
+    }{
+        { "sets a new value at index 2", []string{"one","two","three"}, "test", 2 },
+        { "sets a new value at index 1", []string{"one","two","three"}, "test", 1 },
+    }
+
+    for _, test := range tests {
+        l := SinglyLinkedList{}
+
+        for _, value := range test.values {
+            l.Push(value)
+        }
+
+        _ = l.Set(test.index, test.newValue)
+        got, _ := l.Get(test.index)
+
+        if got.Value != test.newValue {
+            t.Errorf("%s: new value incorrectly set. got %v, but wanted %v", test.name, got.Value, test.newValue)
+        }
+    }
+}
