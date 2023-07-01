@@ -1,6 +1,7 @@
 package dataStructures
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -135,6 +136,39 @@ func Test_Unshift(t *testing.T) {
 
         if l.Length != test.lengthAfterUnshift {
             t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterUnshift)
+        }
+    }
+}
+
+func Test_Get(t *testing.T) {
+    tests := []struct{
+        name string
+        values []string
+        index int
+    }{
+        { "gets node at index 2", []string{"one","two","three"}, 2 },
+        { "returns out of bounds error", []string{"one","two","three"}, 5 },
+    }
+
+    for _, test := range tests {
+        l := SinglyLinkedList{}
+
+        for _, value := range test.values {
+            l.Push(value)
+        }
+
+        got, err := l.Get(test.index)
+        if err != nil {
+            want := "no node found at index %d."
+            if err.Error() != fmt.Sprintf(want, test.index) {
+                t.Errorf("%s: returned incorrect error. got %v, but wanted %v", test.name, err.Error(), fmt.Errorf(want, test.index))
+            }
+            continue
+        }
+        want := test.values[test.index]
+
+        if got.Value != want {
+            t.Errorf("%s: returned incorrect value. got %v, but wanted %v", test.name, got.Value, want)
         }
     }
 }
