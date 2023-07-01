@@ -71,3 +71,47 @@ func Test_Pop(t *testing.T) {
         }
     }
 }
+
+func Test_Shift(t *testing.T) {
+    tests := []struct{
+        name                string
+        values               []string
+        lengthAfterShift    int
+    }{
+        { "succesfully removes the first item", []string{"one"}, 0 },
+    }
+
+    for _, test := range tests {
+        l := SinglyLinkedList{}
+
+        for _, value := range test.values {
+            l.Push(value)
+        }
+
+        got, _ := l.Shift()
+        want := test.values[0]
+        
+        if got.Value != want {
+            t.Errorf("%s: incorrect value returned. got %v, but wanted %v", test.name, got.Value, want)
+        }
+
+        if l.Length != test.lengthAfterShift {
+            t.Errorf("%s: incorrect length after shift. got :%d, but wanted %d", test.name, l.Length, test.lengthAfterShift)
+        }
+
+        _, err := l.Shift()
+        if err == nil {
+            t.Errorf("%s: expected length error, but didn't get one", test.name)
+        }
+
+        if err != nil {
+            want := "list already has length of zero."
+
+            if err.Error() == want {
+                continue
+            }
+
+            t.Errorf("%s: expected empty list error. got %v, but wanted %v", test.name, err.Error(), want)
+        }
+    }
+}
