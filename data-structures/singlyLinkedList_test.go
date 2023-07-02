@@ -76,7 +76,7 @@ func Test_Pop(t *testing.T) {
 func Test_Shift(t *testing.T) {
     tests := []struct{
         name                string
-        values               []string
+        values              []string
         lengthAfterShift    int
     }{
         { "succesfully removes the first item", []string{"one"}, 0 },
@@ -142,9 +142,9 @@ func Test_Unshift(t *testing.T) {
 
 func Test_Get(t *testing.T) {
     tests := []struct{
-        name string
-        values []string
-        index int
+        name    string
+        values  []string
+        index   int
     }{
         { "gets node at index 2", []string{"one","two","three"}, 2 },
         { "returns out of bounds error", []string{"one","two","three"}, 5 },
