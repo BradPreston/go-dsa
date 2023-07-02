@@ -199,3 +199,35 @@ func Test_Set(t *testing.T) {
         }
     }
 }
+
+func Test_Insert(t *testing.T) {
+    tests := []struct{
+        name    string
+        index   int
+        value   string
+    }{
+        { "inserts at index 0", 0, "zero" },
+        { "inserts at index 1", 1, "test" },
+        { "throws out of bounds error", 4, "error" },
+    }
+
+    for _, test := range tests {
+        l := SinglyLinkedList{}
+        l.Push("one")
+        l.Push("two")
+        err := l.Insert(test.index, test.value)
+        if err != nil {
+            want := "index must be greater than zero and less than the length of the list."
+            if err.Error() != want {
+                t.Errorf("%s: incorrect error. got %v, but wanted %v", test.name, err.Error(), want)
+            }
+            continue
+        }
+
+        node, _ := l.Get(test.index)
+
+        if node.Value != test.value {
+            t.Errorf("%s: node contains incorrect value. got %s, but wanted %s", test.name, node.Value, test.value)
+        }
+    }
+}
