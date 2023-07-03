@@ -297,3 +297,18 @@ func Test_Remove(t *testing.T) {
         }
     }
 }
+
+func Test_Reverse(t *testing.T) {
+    l := SinglyLinkedList{}
+    l.Push("one")
+    l.Push("two")
+    l.Push("three")
+
+    l.Reverse()
+
+    head, _ := l.Get(0)
+    tail, _ := l.Get(2)
+    if head.Value != "three" && tail.Value != "one" {
+        t.Error("list did not reverse")
+    }
+}
