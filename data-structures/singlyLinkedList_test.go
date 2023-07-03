@@ -6,8 +6,10 @@ import (
 )
 
 var incorrectLengthError = "%s: incorrect list length. got %d, but wanted %d"
+var lengthOfZeroError = "list already has length of zero."
 var incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wanted %s"
 var incorrectErrError = "%s: incorrect error. got %s, but wanted %s"
+var unexpectedErrError = "%s: got an error, but didn't expect one"
 var outOfBoundsError = "index must be greater than zero and less than the length of the list."
 
 func Test_Push(t *testing.T) {
@@ -38,31 +40,34 @@ func Test_Pop(t *testing.T) {
         name            string
         values          []string
         lengthAfterPop  int
+        expectedErr     bool
     }{
-        { "removes the last item from a list with length of 1", []string{"one"}, 0 },
-        { "removes the last item from a list with a length of 3", []string{"one","two","three"}, 2 },
-        { "throws an error if trying to pop from empty list", []string{}, 0 },
-        { "popped node has a value of 'one'", []string{"one"}, 0 },
+        { "removes the last item from a list with length of 1", []string{"one"}, 0, false },
+        { "removes the last item from a list with a length of 3", []string{"one","two","three"}, 2, false },
+        { "throws an error if trying to pop from empty list", []string{}, 0, true },
+        { "popped node has a value of 'one'", []string{"one"}, 0, false },
     }
 
     for _, test := range tests {
         l := SinglyLinkedList{}
 
-        for _, node := range test.values {
-            l.Push(node)
+        for _, value := range test.values {
+            l.Push(value)
         }
 
-        popped, err := l.Pop()
+        got, err := l.Pop()
         if err != nil {
-            want := "list already has length of zero."
-
-            if err.Error() == want {
-                continue
+            if test.expectedErr == false {
+                t.Errorf(unexpectedErrError, test.name)
             }
-            
-            t.Errorf("%s: expected empty list error. got %v, but wanted %v", test.name, want, emptyListErr)
-            return
+
+            if err.Error() != lengthOfZeroError {
+                t.Errorf(incorrectErrError, test.name, err.Error(), lengthOfZeroError)
+            }
+
+            continue
         }
+
 
         if l.Length != test.lengthAfterPop {
             t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterPop)
@@ -70,8 +75,8 @@ func Test_Pop(t *testing.T) {
 
         want := test.values[len(test.values) - 1]
 
-        if popped.Value != want {
-            t.Errorf(incorrectNodeValueError, test.name, popped, want)
+        if got.Value != want {
+            t.Errorf(incorrectNodeValueError, test.name, got.Value, want)
         }
     }
 }
