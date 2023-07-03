@@ -11,6 +11,7 @@ var incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wa
 var incorrectErrError = "%s: incorrect error. got %s, but wanted %s"
 var unexpectedErrError = "%s: got an error, but didn't expect one"
 var outOfBoundsError = "index must be greater than zero and less than the length of the list."
+var expectedErrError = "%s: expected an error, but didn't get one"
 
 func Test_Push(t *testing.T) {
     tests := []struct{
@@ -86,8 +87,10 @@ func Test_Shift(t *testing.T) {
         name                string
         values              []string
         lengthAfterShift    int
+        expectedErr         bool
     }{
-        { "succesfully removes the first item", []string{"one"}, 0 },
+        { "succesfully removes the first item", []string{"one"}, 0, false },
+        { "throws empty list error", []string{}, 0, true },
     }
 
     for _, test := range tests {
@@ -97,7 +100,24 @@ func Test_Shift(t *testing.T) {
             l.Push(value)
         }
 
-        got, _ := l.Shift()
+        got, err := l.Shift()
+        if err != nil {
+            // if an error IS expected, but it isn't the corrrect error
+            if test.expectedErr {
+                if err.Error() != lengthOfZeroError {
+                    t.Errorf(incorrectErrError, test.name, err.Error(), lengthOfZeroError)
+                }
+            } else {
+                t.Errorf(unexpectedErrError, test.name)
+            }
+
+            continue
+        }
+
+        if err == nil && test.expectedErr {
+            t.Errorf(expectedErrError, test.name)
+        }
+
         want := test.values[0]
         
         if got.Value != want {
@@ -106,21 +126,6 @@ func Test_Shift(t *testing.T) {
 
         if l.Length != test.lengthAfterShift {
             t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterShift)
-        }
-
-        _, err := l.Shift()
-        if err == nil {
-            t.Errorf("%s: expected length error, but didn't get one", test.name)
-        }
-
-        if err != nil {
-            want := "list already has length of zero."
-
-            if err.Error() == want {
-                continue
-            }
-
-            t.Errorf("%s: expected empty list error. got %v, but wanted %v", test.name, err.Error(), want)
         }
     }
 }
