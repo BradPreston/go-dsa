@@ -220,13 +220,14 @@ func Test_Set(t *testing.T) {
 
 func Test_Insert(t *testing.T) {
     tests := []struct{
-        name    string
-        index   int
-        value   string
+        name        string
+        index       int
+        value       string
+        expectedErr bool
     }{
-        { "inserts at index 0", 0, "zero" },
-        { "inserts at index 1", 1, "test" },
-        { "throws out of bounds error", 4, "error" },
+        { "inserts at index 0", 0, "zero", false },
+        { "inserts at index 1", 1, "test", false },
+        { "throws out of bounds error", 4, "error", true },
     }
 
     for _, test := range tests {
@@ -235,16 +236,21 @@ func Test_Insert(t *testing.T) {
         l.Push("two")
         err := l.Insert(test.index, test.value)
         if err != nil {
-            if err.Error() != outOfBoundsError {
-                t.Errorf(incorrectErrError, test.name, err.Error(), outOfBoundsError)
+            if test.expectedErr {
+                if err.Error() != outOfBoundsError {
+                    t.Errorf(incorrectErrError, test.name, err.Error(), outOfBoundsError)
+                }
+            } else {
+                t.Errorf(unexpectedErrError, test.name)
             }
+
             continue
         }
 
-        node, _ := l.Get(test.index)
+        got, _ := l.Get(test.index)
 
-        if node.Value != test.value {
-            t.Errorf(incorrectNodeValueError, test.name, node.Value, test.value)
+        if got.Value != test.value {
+            t.Errorf(incorrectNodeValueError, test.name, got.Value, test.value)
         }
     }
 }
@@ -255,10 +261,11 @@ func Test_Remove(t *testing.T) {
         values              []string
         index               int
         lengthAfterRemove   int
+        expectedErr         bool
     }{
-        { "removes node at index 2", []string{"one","two","three"}, 2, 2 },
-        { "removes node at index 0", []string{"one"}, 0, 0 },
-        { "throws out of bounds error", []string{"one","two","three"}, 5, 3 },
+        { "removes node at index 2", []string{"one","two","three"}, 2, 2, false },
+        { "removes node at index 0", []string{"one"}, 0, 0, false },
+        { "throws out of bounds error", []string{"one","two","three"}, 5, 3, true },
     }
 
     for _, test := range tests {
@@ -270,8 +277,12 @@ func Test_Remove(t *testing.T) {
 
         got, err := l.Remove(test.index)
         if err != nil {
-            if err.Error() != outOfBoundsError {
-                t.Errorf(incorrectErrError, test.name, err.Error(), outOfBoundsError)
+            if test.expectedErr {
+                if err.Error() != outOfBoundsError {
+                    t.Errorf(incorrectErrError, test.name, err.Error(), outOfBoundsError)
+                }
+            } else {
+                t.Errorf(unexpectedErrError, test.name)
             }
 
             continue
