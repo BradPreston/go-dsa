@@ -58,12 +58,12 @@ func Test_Pop(t *testing.T) {
 
         got, err := l.Pop()
         if err != nil {
-            if test.expectedErr == false {
+            if test.expectedErr {
+                if err.Error() != lengthOfZeroError {
+                    t.Errorf(incorrectErrError, test.name, err.Error(), lengthOfZeroError)
+                }
+            } else {
                 t.Errorf(unexpectedErrError, test.name)
-            }
-
-            if err.Error() != lengthOfZeroError {
-                t.Errorf(incorrectErrError, test.name, err.Error(), lengthOfZeroError)
             }
 
             continue
