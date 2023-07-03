@@ -6,6 +6,9 @@ import (
 )
 
 var incorrectLengthError = "%s: incorrect list length. got %d, but wanted %d"
+var incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wanted %s"
+var incorrectErrError = "%s: incorrect error. got %s, but wanted %s"
+var outOfBoundsError = "index must be greater than zero and less than the length of the list."
 
 func Test_Push(t *testing.T) {
     tests := []struct{
@@ -68,7 +71,7 @@ func Test_Pop(t *testing.T) {
         want := test.values[len(test.values) - 1]
 
         if popped.Value != want {
-            t.Errorf("%s: incorrect value from pop. got %v, but wanted %v", test.name, popped, want)
+            t.Errorf(incorrectNodeValueError, test.name, popped, want)
         }
     }
 }
@@ -93,11 +96,11 @@ func Test_Shift(t *testing.T) {
         want := test.values[0]
         
         if got.Value != want {
-            t.Errorf("%s: incorrect value returned. got %v, but wanted %v", test.name, got.Value, want)
+            t.Errorf(incorrectNodeValueError, test.name, got.Value, want)
         }
 
         if l.Length != test.lengthAfterShift {
-            t.Errorf("%s: incorrect length after shift. got :%d, but wanted %d", test.name, l.Length, test.lengthAfterShift)
+            t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterShift)
         }
 
         _, err := l.Shift()
@@ -161,14 +164,14 @@ func Test_Get(t *testing.T) {
         if err != nil {
             want := "no node found at index %d."
             if err.Error() != fmt.Sprintf(want, test.index) {
-                t.Errorf("%s: returned incorrect error. got %v, but wanted %v", test.name, err.Error(), fmt.Errorf(want, test.index))
+                t.Errorf(incorrectErrError, test.name, err.Error(), fmt.Errorf(want, test.index))
             }
             continue
         }
         want := test.values[test.index]
 
         if got.Value != want {
-            t.Errorf("%s: returned incorrect value. got %v, but wanted %v", test.name, got.Value, want)
+            t.Errorf(incorrectNodeValueError, test.name, got.Value, want)
         }
     }
 }
@@ -195,7 +198,7 @@ func Test_Set(t *testing.T) {
         got, _ := l.Get(test.index)
 
         if got.Value != test.newValue {
-            t.Errorf("%s: new value incorrectly set. got %v, but wanted %v", test.name, got.Value, test.newValue)
+            t.Errorf(incorrectNodeValueError, test.name, got.Value, test.newValue)
         }
     }
 }
@@ -217,9 +220,8 @@ func Test_Insert(t *testing.T) {
         l.Push("two")
         err := l.Insert(test.index, test.value)
         if err != nil {
-            want := "index must be greater than zero and less than the length of the list."
-            if err.Error() != want {
-                t.Errorf("%s: incorrect error. got %v, but wanted %v", test.name, err.Error(), want)
+            if err.Error() != outOfBoundsError {
+                t.Errorf(incorrectErrError, test.name, err.Error(), outOfBoundsError)
             }
             continue
         }
@@ -227,7 +229,45 @@ func Test_Insert(t *testing.T) {
         node, _ := l.Get(test.index)
 
         if node.Value != test.value {
-            t.Errorf("%s: node contains incorrect value. got %s, but wanted %s", test.name, node.Value, test.value)
+            t.Errorf(incorrectNodeValueError, test.name, node.Value, test.value)
+        }
+    }
+}
+
+func Test_Remove(t *testing.T) {
+    tests := []struct{
+        name                string
+        values              []string
+        index               int
+        lengthAfterRemove   int
+    }{
+        { "removes node at index 2", []string{"one","two","three"}, 2, 2 },
+        { "removes node at index 0", []string{"one"}, 0, 0 },
+        { "throws out of bounds error", []string{"one","two","three"}, 5, 3 },
+    }
+
+    for _, test := range tests {
+        l := SinglyLinkedList{}
+
+        for _, value := range test.values {
+            l.Push(value)
+        }
+
+        got, err := l.Remove(test.index)
+        if err != nil {
+            if err.Error() != outOfBoundsError {
+                t.Errorf(incorrectErrError, test.name, err.Error(), outOfBoundsError)
+            }
+
+            continue
+        }
+
+        if got.Value != test.values[test.index] {
+            t.Errorf(incorrectNodeValueError, test.name, got.Value, test.values[test.index])
+        }
+
+        if l.Length != test.lengthAfterRemove {
+            t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterRemove)
         }
     }
 }
