@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+type node struct {
+  Value any
+  next *node
+}
+
 type SinglyLinkedList struct {
 	Head   *node
 	Tail   *node
