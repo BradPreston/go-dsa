@@ -120,7 +120,7 @@ func (s *SinglyLinkedList) Unshift(val any) {
 // Get finds a node by index and returns it.
 func (s *SinglyLinkedList) Get(index int) (*node, error) {
     if index < 0 || index >= s.Length {
-        return nil, fmt.Errorf("no node found at index %d.", index)
+        return nil, errors.New(indexOutOfBoundsErr)
     }
 
     counter := 0
