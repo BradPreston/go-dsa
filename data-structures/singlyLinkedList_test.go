@@ -1,7 +1,6 @@
 package dataStructures
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -155,12 +154,13 @@ func Test_Unshift(t *testing.T) {
 
 func Test_Get(t *testing.T) {
     tests := []struct{
-        name    string
-        values  []string
-        index   int
+        name        string
+        values      []string
+        index       int
+        expectedErr bool
     }{
-        { "gets node at index 2", []string{"one","two","three"}, 2 },
-        { "returns out of bounds error", []string{"one","two","three"}, 5 },
+        { "gets node at index 2", []string{"one","two","three"}, 2, false },
+        { "returns out of bounds error", []string{"one","two","three"}, 5, true },
     }
 
     for _, test := range tests {
@@ -172,12 +172,17 @@ func Test_Get(t *testing.T) {
 
         got, err := l.Get(test.index)
         if err != nil {
-            want := "no node found at index %d."
-            if err.Error() != fmt.Sprintf(want, test.index) {
-                t.Errorf(incorrectErrError, test.name, err.Error(), fmt.Errorf(want, test.index))
+            if test.expectedErr {
+                if err.Error() != outOfBoundsError {
+                    t.Errorf(incorrectErrError, test.name, err.Error(), outOfBoundsError)
+                }
+            } else {
+                t.Errorf(unexpectedErrError, test.name)
             }
+
             continue
         }
+
         want := test.values[test.index]
 
         if got.Value != want {
