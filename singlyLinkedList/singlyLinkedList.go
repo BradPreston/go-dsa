@@ -6,8 +6,8 @@ import (
 )
 
 type node struct {
-  Value any
-  next *node
+	Value any
+	next  *node
 }
 
 type SinglyLinkedList struct {
@@ -16,8 +16,10 @@ type SinglyLinkedList struct {
 	Length int
 }
 
-var indexOutOfBoundsErr = "index must be greater than zero and less than the length of the list."
-var emptyListErr = "list already has length of zero."
+var (
+	indexOutOfBoundsErr = "index must be greater than zero and less than the length of the list."
+	emptyListErr        = "list already has length of zero."
+)
 
 // Print loops through all the nodes in the queue and prints them to the console.
 func (s *SinglyLinkedList) Print() {

@@ -4,13 +4,15 @@ import (
 	"testing"
 )
 
-var incorrectLengthError = "%s: incorrect list length. got %d, but wanted %d"
-var lengthOfZeroError = "list already has length of zero."
-var incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wanted %s"
-var incorrectErrError = "%s: incorrect error. got %s, but wanted %s"
-var unexpectedErrError = "%s: got an error, but didn't expect one"
-var outOfBoundsError = "index must be greater than zero and less than the length of the list."
-var expectedErrError = "%s: expected an error, but didn't get one"
+var (
+	incorrectLengthError    = "%s: incorrect list length. got %d, but wanted %d"
+	lengthOfZeroError       = "list already has length of zero."
+	incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wanted %s"
+	incorrectErrError       = "%s: incorrect error. got %s, but wanted %s"
+	unexpectedErrError      = "%s: got an error, but didn't expect one"
+	outOfBoundsError        = "index must be greater than zero and less than the length of the list."
+	expectedErrError        = "%s: expected an error, but didn't get one"
+)
 
 func Test_Push(t *testing.T) {
 	tests := []struct {

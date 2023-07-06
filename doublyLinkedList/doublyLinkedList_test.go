@@ -2,33 +2,35 @@ package doublyLinkedList
 
 import "testing"
 
-var incorrectLengthError = "%s: incorrect list length. got %d, but wanted %d"
-var lengthOfZeroError = "list already has length of zero."
-var incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wanted %s"
-var incorrectErrError = "%s: incorrect error. got %s, but wanted %s"
-var unexpectedErrError = "%s: got an error, but didn't expect one"
+var (
+	incorrectLengthError    = "%s: incorrect list length. got %d, but wanted %d"
+	lengthOfZeroError       = "list already has length of zero."
+	incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wanted %s"
+	incorrectErrError       = "%s: incorrect error. got %s, but wanted %s"
+	unexpectedErrError      = "%s: got an error, but didn't expect one"
+)
 
 func Test_Push(t *testing.T) {
-  tests := []struct {
-    name            string
-    values          []string
-    lengthAfterPush int
-  }{
-    {"adds one node to end of list", []string{"one"}, 1},
-    {"adds three nodes to end of list", []string{"one", "two", "three"}, 3},
-  }
+	tests := []struct {
+		name            string
+		values          []string
+		lengthAfterPush int
+	}{
+		{"adds one node to end of list", []string{"one"}, 1},
+		{"adds three nodes to end of list", []string{"one", "two", "three"}, 3},
+	}
 
-  for _, test := range tests {
-    l := DoublyLinkedList{}
+	for _, test := range tests {
+		l := DoublyLinkedList{}
 
-    for _, value := range test.values {
-      l.Push(value)
-    }
+		for _, value := range test.values {
+			l.Push(value)
+		}
 
-    if l.Length != test.lengthAfterPush {
-      t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterPush)
-    }
-  }
+		if l.Length != test.lengthAfterPush {
+			t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterPush)
+		}
+	}
 }
 
 func Test_Pop(t *testing.T) {
@@ -74,5 +76,4 @@ func Test_Pop(t *testing.T) {
 			t.Errorf(incorrectNodeValueError, test.name, got.Value, want)
 		}
 	}
-
 }

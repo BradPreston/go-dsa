@@ -47,7 +47,6 @@ func TestDequeue_NotExpectingError(t *testing.T) {
 	q := Queue{}
 	q.Enqueue("test")
 	_, err := q.Dequeue()
-
 	if err != nil {
 		t.Error("dequeue - queue is not empty. got an error, but shouldn't have.")
 	}
