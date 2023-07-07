@@ -8,6 +8,8 @@ var (
 	incorrectNodeValueError = "%s: node contains incorrect value. got %s, but wanted %s"
 	incorrectErrError       = "%s: incorrect error. got %s, but wanted %s"
 	unexpectedErrError      = "%s: got an error, but didn't expect one"
+	outOfBoundsError        = "index must be greater than zero and less than the length of the list."
+	expectedErrError        = "%s: expected an error, but didn't get one"
 )
 
 func Test_Push(t *testing.T) {
@@ -74,6 +76,54 @@ func Test_Pop(t *testing.T) {
 
 		if got.Value != want {
 			t.Errorf(incorrectNodeValueError, test.name, got.Value, want)
+		}
+	}
+}
+
+func Test_Shift(t *testing.T) {
+	tests := []struct {
+		name             string
+		values           []string
+		lengthAfterShift int
+		expectedErr      bool
+	}{
+		{"succesfully removes the first item", []string{"one"}, 0, false},
+		{"throws empty list error", []string{}, 0, true},
+	}
+
+	for _, test := range tests {
+		l := DoublyLinkedList{}
+
+		for _, value := range test.values {
+			l.Push(value)
+		}
+
+		got, err := l.Shift()
+		if err != nil {
+			// if an error IS expected, but it isn't the corrrect error
+			if test.expectedErr {
+				if err.Error() != lengthOfZeroError {
+					t.Errorf(incorrectErrError, test.name, err.Error(), lengthOfZeroError)
+				}
+			} else {
+				t.Errorf(unexpectedErrError, test.name)
+			}
+
+			continue
+		}
+
+		if err == nil && test.expectedErr {
+			t.Errorf(expectedErrError, test.name)
+		}
+
+		want := test.values[0]
+
+		if got.Value != want {
+			t.Errorf(incorrectNodeValueError, test.name, got.Value, want)
+		}
+
+		if l.Length != test.lengthAfterShift {
+			t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterShift)
 		}
 	}
 }
