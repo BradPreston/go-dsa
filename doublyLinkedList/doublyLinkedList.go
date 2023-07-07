@@ -25,17 +25,18 @@ func (d *DoublyLinkedList) Print() {
 	current := d.Head
 
 	for {
-        if current.next == nil && current.prev == nil {
-			fmt.Printf("current: %v, prev: nil, next: nil\n", current.Value)
-            break;
+        if d.Length == 0 {
+            break
         }
-        
-		if current.next == nil {
-			fmt.Printf("current: %v, prev: %v, next: nil\n", current.Value, current.prev.Value)
-			break
-		}
 
-	    fmt.Printf("current: %v, prev: %v, next: %v\n", current.Value, current.prev.Value, current.next.Value)
+        if current.prev == nil {
+			fmt.Printf("current: %v, prev: nil, next: nil\n", current.Value)
+        } else if current.next == nil {
+			fmt.Printf("current: %v, prev: %v, next: nil\n", current.Value, current.prev.Value)
+            break
+        } else {
+            fmt.Printf("current: %v, prev: %v, next: %v\n", current.Value, current.prev.Value, current.next.Value)
+        }
 
 		current = current.next
 	}
@@ -103,4 +104,24 @@ func (d *DoublyLinkedList) Shift() (*node, error) {
     d.Length -= 1
 
     return currentHead, nil
+}
+
+// Unshift adds a node to the beginning of the list.
+func (d *DoublyLinkedList) Unshift(val any) {
+    newNode := node{
+        Value: val,
+        next: nil,
+        prev: nil,
+    }
+
+    if d.Length == 0 {
+        d.Head = &newNode
+        d.Tail = &newNode
+    } else {
+        d.Head.prev = &newNode
+        newNode.next = d.Head
+        d.Head = &newNode
+    }
+
+    d.Length += 1
 }
