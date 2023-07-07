@@ -25,16 +25,21 @@ func (d *DoublyLinkedList) Print() {
 	current := d.Head
 
 	for {
+        if current.next == nil && current.prev == nil {
+			fmt.Printf("current: %v, prev: nil, next: nil\n", current.Value)
+            break;
+        }
+        
 		if current.next == nil {
 			fmt.Printf("current: %v, prev: %v, next: nil\n", current.Value, current.prev.Value)
 			break
 		}
 
-		if current.prev == nil {
-			fmt.Printf("current: %v, prev: nil, next: nil\n", current.Value)
-		} else {
+		// if current.prev == nil {
+		// 	fmt.Printf("current: %v, prev: nil, next: nil\n", current.Value)
+		// } else {
 			fmt.Printf("current: %v, prev: %v, next: %v\n", current.Value, current.prev.Value, current.next.Value)
-		}
+		// }
 
 		current = current.next
 	}
@@ -60,7 +65,7 @@ func (d *DoublyLinkedList) Push(val any) {
 	d.Length += 1
 }
 
-// Pop removes the last node from the list and returns it's value.
+// Pop removes the last node from the list and returns it.
 func (d *DoublyLinkedList) Pop() (*node, error) {
 	if d.Length == 0 {
 		return nil, errors.New(emptyListErr)
@@ -80,4 +85,26 @@ func (d *DoublyLinkedList) Pop() (*node, error) {
 	d.Length -= 1
 
 	return currentTail, nil
+}
+
+// Shift removes the first node from the list and returns it
+func (d *DoublyLinkedList) Shift() (*node, error) {
+    if d.Length == 0 {
+        return nil, errors.New(emptyListErr)
+    }
+
+    currentHead := d.Head
+
+    if d.Length == 1 {
+        d.Head = nil
+        d.Tail = nil
+    } else {
+        d.Head = currentHead.next
+        d.Head.prev = nil
+        currentHead.next = nil
+    }
+
+    d.Length -= 1
+
+    return currentHead, nil
 }
