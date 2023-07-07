@@ -35,11 +35,7 @@ func (d *DoublyLinkedList) Print() {
 			break
 		}
 
-		// if current.prev == nil {
-		// 	fmt.Printf("current: %v, prev: nil, next: nil\n", current.Value)
-		// } else {
-			fmt.Printf("current: %v, prev: %v, next: %v\n", current.Value, current.prev.Value, current.next.Value)
-		// }
+	    fmt.Printf("current: %v, prev: %v, next: %v\n", current.Value, current.prev.Value, current.next.Value)
 
 		current = current.next
 	}
