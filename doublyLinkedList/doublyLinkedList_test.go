@@ -127,3 +127,26 @@ func Test_Shift(t *testing.T) {
 		}
 	}
 }
+
+func Test_Unshift(t *testing.T) {
+	tests := []struct {
+		name               string
+		values             []string
+		lengthAfterUnshift int
+	}{
+		{"adds one node to beginning", []string{"one"}, 1},
+		{"adds three node to beginning", []string{"one", "two", "three"}, 3},
+	}
+
+	for _, test := range tests {
+		l := DoublyLinkedList{}
+
+		for _, value := range test.values {
+			l.Unshift(value)
+		}
+
+		if l.Length != test.lengthAfterUnshift {
+			t.Errorf(incorrectLengthError, test.name, l.Length, test.lengthAfterUnshift)
+		}
+	}
+}
